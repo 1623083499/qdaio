@@ -1,0 +1,52 @@
+--发布之前执行以下脚本
+
+-- Create table
+create table NET_PROXY_LOG
+(
+  ID         NUMBER(16),
+  LOGINTOKEN VARCHAR2(20),
+  CTIME      DATE,
+  URL        VARCHAR2(200),
+  PARAMS     VARCHAR2(2000),
+  USETIME    NUMBER(12),
+  ERRORMSG   VARCHAR2(500)
+)
+tablespace QDAPPDATA_SI
+  pctfree 10
+  initrans 1
+  maxtrans 255
+  storage
+  (
+    initial 16M
+    next 16M
+    minextents 1
+    maxextents unlimited
+    pctincrease 0
+  );
+-- Add comments to the table
+comment on table NET_PROXY_LOG
+  is '代理内网接口日志表';
+-- Add comments to the columns
+comment on column NET_PROXY_LOG.ID
+  is 'ID';
+comment on column NET_PROXY_LOG.LOGINTOKEN
+  is '用户ID';
+comment on column NET_PROXY_LOG.CTIME
+  is '创建时间';
+comment on column NET_PROXY_LOG.URL
+  is '路径';
+comment on column NET_PROXY_LOG.PARAMS
+  is '参数';
+comment on column NET_PROXY_LOG.USETIME
+  is '耗时';
+comment on column NET_PROXY_LOG.ERRORMSG
+  is '错误日志';
+
+
+
+create sequence SEQ_net_proxy_log
+minvalue 1
+maxvalue 9999999999999999
+start with 1
+increment by 1
+cache 200;

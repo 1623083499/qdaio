@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE weblogic-web-app 
+ PUBLIC "-//BEA Systems, Inc.//DTD Web Application 8.1//EN" 
+ "http://www.bea.com/servers/wls810/dtd/weblogic810-web-jar.dtd">
+<weblogic-web-app>
+	<session-descriptor>
+		<cookie-name>JSESSIONID_qdythWS</cookie-name>
+	</session-descriptor>
+	<container-descriptor>
+		<!--do not reload context when update class-->
+		<servlet-reload-check-secs>-1</servlet-reload-check-secs>
+		<!--
+			if there are some application's library that alread in weblogic's share library
+			,but may have different versions ,then use application's library.
+		-->
+		<prefer-web-inf-classes>true</prefer-web-inf-classes>
+	</container-descriptor>
+</weblogic-web-app>

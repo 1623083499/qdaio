@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans"        
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"               
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">       
+
+	<bean id="connectionPropertis" class="com.wondersgroup.qdaio.proxy.ConnectionPropertis">
+		<!--#代理访问的地址端口-->
+		<!--<property name="target" value="http://15.72.10.121:7002" />-->
+		<property name="target" value="http://192.168.2.235:8080" />
+		<!--## 最大连接数-->
+		<property name="max_total" value="200" />
+		<!--## 每一个路由的最大连接数-->
+		<property name="max_per_route" value="50" />
+		<!--##从连接池中获得连接的超时时间-->
+		<property name="connection_request_timeout" value="5000" />
+		<!--#连接超时-->
+		<property name="connection_timeout" value="300000" />
+		<!--#获取数据的超时时间-->
+		<property name="socket_timeout" value="300000" />
+		<!--#日志记录缓存最大数-->
+		<property name="log_pool_cache" value="2" />
+		<!--#网关工程名称-->
+		<property name="project_name" value="qdaio-proxy"/>
+		<!--#调用内网口令-->
+		<property name="api_token" value="5763317dd725182093ea049d0e9e8bef"/>
+		<!--#调用内网用户名-->
+		<property name="api_login_name" value="SHWWYH"/>
+		<!--#调用内网密码-->
+		<property name="api_login_password" value="670b14728ad9902aecba32e22fa4f6bd"/>
+	</bean>
+	<bean id="connectionManager" class="com.wondersgroup.qdaio.proxy.ConnectionManager">
+		<constructor-arg index="0" ref="connectionPropertis"></constructor-arg>
+	</bean>
+	<bean id="defaultUriRoute" class="com.wondersgroup.qdaio.proxy.processor.DefaultUriRoute">
+		<constructor-arg index="0" ref="connectionPropertis"></constructor-arg>
+	</bean>
+	<bean id="proxyLogUtils" class="com.wondersgroup.qdaio.proxy.ProxyLogUtils">
+		<constructor-arg index="0" ref="connectionPropertis"></constructor-arg>
+	</bean>
+</beans>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/cache
+       http://www.springframework.org/schema/cache/spring-cache.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 自动扫描组件，需要把controller去掉，否则影响事务管理 -->
+    <context:component-scan base-package="com.wondersgroup">
+        <context:exclude-filter type="regex" expression="com.wondersgroup.qdaio.gett.contrallor.*" />
+    </context:component-scan>
+
+    <!--系统初始化加载-->
+    <bean class="com.wondersgroup.qdaio.gett.listener.ContextLoadListerer"></bean>
+    <!--  <cache:annotation-driven /> 启用缓存 -->
+    <!-- 属性配置接入 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:database.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.connection.driver_class}" />
+        <property name="url" value="${jdbc.connection.url}" />
+        <property name="username" value="${jdbc.connection.username}" />
+        <property name="password" value="${jdbc.connection.password}" />
+        <property name="initialSize" value="${jdbc.connection.initialSize}" />
+        <property name="maxActive" value="${jdbc.connection.maxActive}" />
+        <property name="maxWait" value="${jdbc.connection.maxWait}" />
+    </bean>
+    <!-- jndi连接池配置 -->
+<!--
+    <bean id="dataSource"
+          class="org.springframework.jndi.JndiObjectFactoryBean">
+        <description>JNDI 数据源配置</description> <property name="jndiName"
+                                                        value="QDYTH-DS"/>
+    </bean>
+-->
+    <!--全局参数配置-->
+    <bean id="contextHolder" class="com.wondersgroup.qdaio.gett.context.ContextHolder">
+        <constructor-arg index="0" type="java.lang.String">
+            <value>application.properties</value>
+        </constructor-arg>
+    </bean>
+    <!-- 配置 spring 的 JdbcTemplate -->
+    <bean id="jdbcTemplate"
+          class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <bean id="commonJdbcCore" class="com.wondersgroup.framwork.dao.impl.CommonJdbcDaoImpl"></bean>
+    <bean id="commonJdbcUtils" class="com.wondersgroup.framwork.dao.CommonJdbcUtils">
+        <constructor-arg>
+            <ref bean="commonJdbcCore"/>
+        </constructor-arg>
+    </bean>
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>
